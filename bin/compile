@@ -39,8 +39,10 @@ TMP_APP_DIR=$CACHE_DIR/tmp_app_dir
 mkdir -p $TMP_APP_DIR
 deep-mv $APP_DIR $TMP_APP_DIR
 
-# Copy Application code in.
-deep-mv $BUILD_DIR $APP_DIR
+if [ $BUILD_DIR != $APP_DIR ]; then
+  # Copy Application code in.
+  deep-mv $BUILD_DIR $APP_DIR
+fi
 
 # Set new context.
 ORIG_BUILD_DIR=$BUILD_DIR
@@ -96,6 +98,8 @@ set-default-env PYTHONPATH /app/
 source $BIN_DIR/steps/hooks/post_compile
 
 # ### Fin.
+if [ $BUILD_DIR != $ORIG_BUILD_DIR ]; then
+  deep-mv $BUILD_DIR $ORIG_BUILD_DIR
+fi
 
-deep-mv $BUILD_DIR $ORIG_BUILD_DIR
 deep-mv $TMP_APP_DIR $APP_DIR
